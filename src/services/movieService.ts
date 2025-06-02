@@ -3,9 +3,13 @@ import type { Movie } from "../types/movie";
 
 interface FetchMoviesRes {
   results: Movie[];
+  total_pages: number;
 }
 
-export default async function fetchMovies(query: string): Promise<Movie[]> {
+export default async function fetchMovies(
+  query: string,
+  page: number
+): Promise<FetchMoviesRes> {
   const myKey = import.meta.env.VITE_API_KEY;
 
   const res = await axios.get<FetchMoviesRes>(
@@ -13,11 +17,12 @@ export default async function fetchMovies(query: string): Promise<Movie[]> {
     {
       params: {
         query,
+        page,
       },
       headers: {
         Authorization: `Bearer ${myKey}`,
       },
     }
   );
-  return res.data.results;
+  return res.data;
 }
