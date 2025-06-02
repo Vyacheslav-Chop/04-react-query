@@ -8,7 +8,7 @@ import type { Movie } from "../../types/movie";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import MovieModal from "../MovieModal/MovieModal";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import ReactPaginate from "react-paginate";
 
 export default function App() {
@@ -20,7 +20,7 @@ export default function App() {
     queryKey: ["movies", query, currentPage],
     queryFn: () => fetchMovies(query, currentPage),
     enabled: query !== "",
-    // placeholderData,
+    placeholderData: keepPreviousData,
   });
 
   useEffect(() => {
@@ -44,12 +44,11 @@ export default function App() {
   const movies = data?.results || [];
   const totalPages = data?.total_pages || 1;
 
-
   return (
     <div className={css.app}>
       <Toaster position="top-center" reverseOrder={false} />
-      <SearchBar onSubmit={handleSearch} successRequest={isSuccess} />
-      {totalPages > 1 && (
+      <SearchBar onSubmit={handleSearch} />
+      {isSuccess && totalPages > 1 && (
         <ReactPaginate
           pageCount={totalPages}
           pageRangeDisplayed={5}

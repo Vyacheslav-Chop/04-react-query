@@ -4,13 +4,9 @@ import toast from "react-hot-toast";
 
 interface SearchBarProps {
   onSubmit: (topic: string) => void;
-  successRequest: boolean;
 }
 
-export default function SearchBar({
-  onSubmit,
-  successRequest,
-}: SearchBarProps) {
+export default function SearchBar({ onSubmit }: SearchBarProps) {
   const [query, setQuery] = useState(() => {
     const savedQuery = window.localStorage.getItem("query");
     try {
@@ -27,13 +23,8 @@ export default function SearchBar({
       return;
     }
     onSubmit(query.trim());
+    setQuery("");
   };
-
-  useEffect(() => {
-    if (successRequest) {
-      setQuery("");
-    }
-  }, [successRequest]);
 
   useEffect(() => {
     if (query !== "") {
